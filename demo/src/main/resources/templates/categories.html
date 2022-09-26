@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div><a th:href="@{/categories/new}">Add New Category</a></div>
+<table>
+
+<th:block th:each="category : ${categories}">
+	<tr>
+		<td th:text="${category.id}"></td>
+		<td th:text="${category.name}"></td>
+		<td><a th:href="@{'/categories/edit_form/'+${category.id}}">edit</a>
+		<a th:href="@{'/categories/delete/'+${category.id}}">delete</a>
+		</td>
+	</tr>
+</th:block>
+</table>
+
+
+</body>
+</html>
