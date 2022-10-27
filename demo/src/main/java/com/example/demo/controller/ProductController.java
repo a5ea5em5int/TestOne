@@ -46,20 +46,20 @@ public class ProductController {
 	}
 
 	@PostMapping("/products/save")
-	public String saveProductForm(@ModelAttribute Product product, RedirectAttributes ra,
+	public String saveProductForm(@ModelAttribute Product product,
 			@RequestParam("image") MultipartFile file) throws IllegalStateException, IOException
 	{  				String fileName = StringUtils.cleanPath(file.getOriginalFilename());  
-	  				String uploadDir = "upload/";
-    	      		product.setFilename(uploadDir+fileName);
-					pservice.addProduct(product);
-					Path uploadPath = Paths.get(uploadDir);
-		if(!Files.exists(uploadPath))
+	  				String uploadDir = "upload/"; // 1. creating upload dir
+    	      		product.setFilename(uploadDir+fileName);// 2. concatenate filename and filepath and set to the product
+					pservice.addProduct(product);//3. saving to table
+					Path uploadPath = Paths.get(uploadDir); // 4.convert to path object
+		if(!Files.exists(uploadPath))// checks whethere path exists
 		{
 			Files.createDirectories(uploadPath);
 		}
 		try (
 			InputStream inputStream =file.getInputStream()){
-			Path filePath = uploadPath.resolve(fileName);
+			Path filePath = uploadPath.resolve(fileName); // concatenating filepath and filename usign path.resolve
 			Files.copy(inputStream, filePath,StandardCopyOption.REPLACE_EXISTING);
 		}catch(IOException ioe) {throw new IOException("could not save image file"+fileName,ioe);}
 		return "redirect:/products";
@@ -80,6 +80,8 @@ public class ProductController {
 	{
 		return "home";
 	}
+	
+
 	@GetMapping("/products/edit_form/{id}")
 	public String showProductForm(@PathVariable("id") Integer id, Model model)
 	{	
